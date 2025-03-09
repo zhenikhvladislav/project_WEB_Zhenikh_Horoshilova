@@ -68,3 +68,61 @@
 - Возможность **добавления дополнительных разделов** в резюме.
 - **Интерактивный превью-редактор**.
 - **Поддержка нескольких языков**.
+
+## 4. Структура проекта
+
+### Возможная схема базы данных:
+```
+User {
+  id: UUID,
+  name: String,
+  email: String,
+  password: String,
+  resumes: [Resume]
+}
+
+Resume {
+  id: UUID,
+  userId: UUID,
+  template: String,
+  content: JSON,
+  createdAt: Timestamp,
+  updatedAt: Timestamp
+}
+```
+
+### Взаимодействие компонентов:
+```
+[Frontend (React/Vue)] <--> [Backend (Node.js, Express)] <--> [Database (Firebase/PostgreSQL)]
+                                       |
+                                       |--> [PDF Generation (jsPDF, html2canvas)]
+```
+
+_Все схемы и эскизы интерфейсов находятся в папке `materials` в формате PNG._
+
+## 5. Описание кода
+
+### a. Переменные и константы
+- `USER_STORAGE_KEY` — ключ для локального хранилища.
+- `PDF_OPTIONS` — настройки генерации PDF.
+
+### b. Функции
+- `saveResume(data)` — сохраняет данные резюме.
+- `generatePDF(resumeData)` — создаёт PDF-файл.
+- `uploadImage(file)` — загружает изображение аватарки.
+
+### c. Классы
+- `User` — управление пользователями.
+- `Resume` — управление резюме.
+- `PDFService` — генерация PDF.
+
+### d. Библиотеки
+- **Frontend:** React, TailwindCSS, Redux.
+- **Backend:** Express, Firebase SDK, bcrypt.
+- **Дополнительно:** jsPDF, html2canvas.
+
+## 6. Графический интерфейс
+
+_Эскизы интерфейсов находятся в папке `materials`._
+
+## 7. Дедлайны
