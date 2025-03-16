@@ -5,13 +5,13 @@ import sqlalchemy.ext.declarative as dec
 
 SqlAlchemyBase = dec.declarative_base()
 
-__factory = None
+factory = None
 
 
 def global_init(db_file):
-    global __factory
+    global factory
 
-    if __factory:
+    if factory:
         return
 
     if not db_file or not db_file.strip():
@@ -21,13 +21,13 @@ def global_init(db_file):
     print(f'{conn_str}-Адрес базы данных, к которой мы подключаемся')
 
     engine = sa.create_engine(conn_str, echo=False)
-    __factory = orm.sessionmaker(bind=engine)
+    factory = orm.sessionmaker(bind=engine)
 
-    from . import __all_models
+    from data import all_models
 
     SqlAlchemyBase.metadata.create_all(engine)
 
 
 def create_session() -> Session:
-    global __factory
-    return __factory()
+    global factory
+    return factory()
