@@ -2,10 +2,130 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{{'Страница создания резюме'}}</title>
+    <title>Страница создания резюме</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif; /* Шрифт Times New Roman */
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: black; /* Черный цвет заголовка */
+            text-align: center;
+            padding: 20px 0;
+            background-color: #4CAF50;
+            margin: 0;
+            color: white;
+            font-size: 32px; /* Увеличенный размер шрифта */
+        }
+
+        h2 {
+            color: black; /* Черный цвет заголовка */
+            margin-left: 40px;
+            font-size: 28px; /* Увеличенный размер шрифта */
+        }
+
+        form {
+            background-color: white;
+            padding: 20px;
+            margin: 20px 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            font-size: 18px; /* Увеличенный размер шрифта для меток */
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: 'Times New Roman', serif; /* Шрифт Times New Roman для полей ввода */
+            font-size: 16px; /* Размер шрифта для полей ввода */
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px; /* Увеличенный размер шрифта для кнопки */
+            font-family: 'Times New Roman', serif; /* Шрифт Times New Roman для кнопки */
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1><center>Создание резюме</center></h1>
-    <h2 style='margin-left: 40px'>Основная информация</h2>
+    <h1>Создание резюме</h1>
+    <div class="container">
+        <form action="/submit_resume" method="post">
+            <h2>Основная информация</h2>
+
+            <label>Личные данные</label>
+            <input type="text" name="fullname" placeholder="Имя и фамилия" required>
+            <input type="text" name="gender" placeholder="Пол">
+            <input type="number" name="age" placeholder="Возраст">
+            <input type="text" name="city" placeholder="Город проживания">
+
+            <label>Контакты</label>
+            <input type="tel" name="phone" placeholder="Номер телефона">
+            <input type="email" name="email" placeholder="Электронная почта">
+            <input type="text" name="social" placeholder="Ссылка на соцсеть">
+            <input type="text" name="messenger" placeholder="Мессенджеры / удобный способ связи">
+
+            <label>Желаемая должность</label>
+            <input type="text" name="position" placeholder="Должность">
+
+            <label>Образование</label>
+            <textarea name="education" placeholder="Название ВУЗа, специальность, годы, формат обучения, курсы и т.д." rows="4"></textarea>
+
+            <label>Опыт работы</label>
+            <textarea name="experience" placeholder="Компания, должность, годы, функционал" rows="4"></textarea>
+
+            <label>Профессиональные навыки</label>
+            <textarea name="skills" placeholder="Ключевые навыки, знание языков, владение программами" rows="3"></textarea>
+
+            <label>Дополнительная информация</label>
+            <textarea name="additional" placeholder="Права, наличие автомобиля, готовность к командировкам и пр." rows="3"></textarea>
+
+            <label>Личные качества</label>
+            <input type="text" name="qualities" placeholder="Перечислите до 5 качеств">
+
+            <button type="submit">Сохранить резюме</button>
+        </form>
+    </div>
 </body>
 </html>

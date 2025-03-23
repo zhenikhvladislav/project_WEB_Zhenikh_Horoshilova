@@ -39,7 +39,8 @@ def register():  # вместо reqister
         user.set_password(form.password.data)
         db_sess.add(user)
         db_sess.commit()
-        return redirect('/login')
+        login_user(user, remember=True)  # Автоматически авторизуем пользователя после регистрации
+        return redirect('/resume')  # Перенаправляем на страницу создания резюме
     return render_template('register.html', title='Регистрация', form=form)
 
 
@@ -51,7 +52,7 @@ def login():
         user = db_sess.query(User).filter(User.email == form.email.data).first()
         if user and user.check_password(form.password.data):
             login_user(user, remember=True)
-            return redirect('/resume')
+            return redirect('/resume')  # Перенаправляем на страницу создания резюме
         return render_template('login.html', title="Неправильный пароль", form=form)
     return render_template('login.html', title="Авторизация", form=form)
 
