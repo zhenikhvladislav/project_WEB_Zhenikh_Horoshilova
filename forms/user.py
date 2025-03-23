@@ -8,3 +8,15 @@ class RegisterForm(FlaskForm):
     email = EmailField('Почта', validators=[DataRequired()])
     password = PasswordField('Пароль', validators=[DataRequired()])
     submit = SubmitField('Создать')
+
+
+class LoginForm(FlaskForm):
+    email = EmailField('Почта', validators=[DataRequired()])
+    password = PasswordField('Пароль', validators=[DataRequired()])
+    submit = SubmitField('Войти')
+
+
+class MainInfoForm(FlaskForm):
+    surname = TextAreaField('Фамилия *обязательное поле*')
+    name = TextAreaField('Имя *обязательное поле*')
+    patronymic = TextAreaField('Отчество *обязательное поле*')
