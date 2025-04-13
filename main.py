@@ -1,9 +1,11 @@
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template, redirect, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required
 from forms.user import RegisterForm, LoginForm
 from data import db_session
 from data.users import User
 from flask_login import current_user
+import pdfkit
+from docx import Document
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -70,11 +72,36 @@ def index():
     return render_template('index.html')
 
 
-
 @app.route('/profile')
 @login_required
 def profile():
     return render_template('profile.html', user=current_user)
+
+
+@app.route('/download_pdf')
+@login_required
+def download_pdf():
+    rendered = render_template('resume.html', user=current_user)
+    pdf_path = 'static/resume.pdf'
+    pdfkit.from_string(rendered, pdf_path)
+    return send_file(pdf_path, as_attachment=True)
+
+
+@app.route('/download_docx')
+@login_required
+def download_docx():
+    doc = Document()
+    doc.add_heading(f"Резюме — {current_user.email}", 0)
+    doc.add_paragraph("Навыки: Python, Flask, SQL")
+    doc.add_paragraph("Опыт: 2 года веб-разработки")
+    doc_path = 'static/resume.docx'
+    doc.save(doc_path)
+    return send_file(doc_path, as_attachment=True)
+
+
+@app.route('/samples')
+def samples():
+    return render_template('samples.html')
 
 
 if __name__ == '__main__':
