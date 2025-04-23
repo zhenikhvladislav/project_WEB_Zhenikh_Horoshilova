@@ -1,3 +1,4 @@
+[file content begin]
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -94,17 +95,39 @@
             margin: 20px 0;
             flex-wrap: wrap;
         }
+
+        .pdf-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px auto;
+            max-width: 600px;
+            text-align: center;
+            border: 1px solid #ffeeba;
+            display: none;
+        }
+
+        .pdf-warning a {
+            color: #0056b3;
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <h1>Создание резюме</h1>
+    <div class="pdf-warning" id="pdfWarning">
+        Для корректной работы данной функции нужно установить приложение, доступное по ссылке: 
+        <a href="https://wkhtmltopdf.org/downloads.html" target="_blank">https://wkhtmltopdf.org/downloads.html</a>
+    </div>
     <div class="action-buttons">
-    <button onclick="saveResume()">Сохранить резюме</button>
-    <a href="/download_pdf"><button>Скачать в PDF</button></a>
-    <a href="/download_docx"><button>Скачать в Word</button></a>
+        <button onclick="saveResume()">Сохранить резюме</button>
+        <a href="/download_pdf"><button onclick="showPdfWarning(event)">Скачать в PDF</button></a>
+        <a href="/download_docx"><button>Скачать в Word</button></a>
     </div>
     <div class="container">
         <form id="resumeForm" action="/submit_resume" method="post">
+            <!-- Остальная форма остается без изменений -->
             <h2>Основная информация</h2>
 
             <label>Личные данные</label>
@@ -155,6 +178,15 @@
 
             localStorage.setItem('resumeData', JSON.stringify(resumeData));
             alert('Резюме сохранено!');
+        }
+
+        function showPdfWarning(e) {
+            e.preventDefault();
+            const warning = document.getElementById('pdfWarning');
+            warning.style.display = 'block';
+            setTimeout(() => {
+                window.location.href = e.target.parentElement.href;
+            }, 5000);
         }
 
         // Загрузка сохраненных данных при загрузке страницы
