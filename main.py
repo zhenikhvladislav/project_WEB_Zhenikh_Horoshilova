@@ -15,7 +15,9 @@ login_manager.init_app(app)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 
-# Создаем папку для загрузок, если ее нет
+wkhtmltopdf_path = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+pdfkit_config = pdfkit.configuration(wkhtmltopdf=wkhtmltopdf_path)
+
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
@@ -91,12 +93,10 @@ def submit_resume():
     try:
         db_sess = db_session.create_session()
 
-        # Проверяем, есть ли уже резюме у пользователя
         resume = db_sess.query(Resume).filter(Resume.user_id == current_user.id).first()
         if not resume:
             resume = Resume(user_id=current_user.id)
 
-        # Обновляем данные резюме
         resume.fullname = request.form.get('fullname')
         resume.gender = request.form.get('gender')
         resume.age = request.form.get('age')
@@ -128,10 +128,6 @@ def submit_resume():
 @login_required
 def download_pdf():
     try:
-        # Укажите правильный путь к wkhtmltopdf
-        config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')  # Linux
-        # config = pdfkit.configuration(wkhtmltopdf='C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe')  # Windows
-
         db_sess = db_session.create_session()
         resume = db_sess.query(Resume).filter(Resume.user_id == current_user.id).first()
 
@@ -139,10 +135,12 @@ def download_pdf():
             flash('Сначала заполните и сохраните резюме', 'error')
             return redirect('/resume')
 
-        # Настройки для PDF
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+
         options = {
             'encoding': 'UTF-8',
-            'enable-local-file-access': None,
+            'enable-local-file-access': '',
             'page-size': 'A4',
             'margin-top': '15mm',
             'margin-right': '15mm',
@@ -153,15 +151,13 @@ def download_pdf():
         rendered = render_template('resume_pdf.html', resume=resume)
         pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], f'resume_{current_user.id}.pdf')
 
-        # Генерация PDF
         pdfkit.from_string(
             rendered,
             pdf_path,
-            configuration=config,
+            configuration=pdfkit_config,
             options=options
         )
 
-        # Проверка существования файла
         if not os.path.exists(pdf_path):
             flash('Файл PDF не был создан', 'error')
             return redirect('/resume')
@@ -187,7 +183,6 @@ def download_docx():
         resume = db_sess.query(Resume).filter(Resume.user_id == current_user.id).first()
 
         if resume:
-            # Новая версия для заполненного резюме
             doc = Document()
             doc.add_heading(f"Резюме — {resume.fullname}", 0)
             doc.add_paragraph(f"Контактная информация: {resume.phone}, {resume.email}")
@@ -205,7 +200,6 @@ def download_docx():
             doc.save(doc_path)
             return send_file(doc_path, as_attachment=True)
         else:
-            # Старая версия для незаполненного резюме
             doc = Document()
             doc.add_heading(f"Резюме — {current_user.email}", 0)
             doc.add_paragraph("Навыки: Python, Flask, SQL")
@@ -218,9 +212,6 @@ def download_docx():
         return redirect('/resume')
 
 
-@app.route('/samples')
-def samples():
-    return render_template('samples.html')
 
 
 if __name__ == '__main__':
